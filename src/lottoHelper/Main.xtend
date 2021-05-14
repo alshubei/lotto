@@ -2,34 +2,68 @@ package lottoHelper
 
 import java.util.List
 import static lottoHelper.Numbers.*
+import java.util.ArrayList
+import java.util.Collections
+import java.util.HashSet
 
 class Main {
 	def static void main(String[] args) {
-		val input = ours_7_5_2021 + won_2020 + won_2021
-		val lines = input.split("\n").map[it.processLine]
-		val finals = lines.map[it
-			.filter[it.trim.length>0]
-			.take(5)
-			.map[Integer.parseInt(it)]
-			.sort
-			//.join("_")
-		]
-		finals.sortBy[it.get(0)].map[it.join("_")].forEach[println(it)]
-		println(finals.size) //38 and i need 70
+		val input =  '''
+		«ours_7_5_2021»
+		«ours_14_5_2021»
+		«won_2021»
+		«won_2020»
+		''' 
+		val newDraws = new ArrayList
+		val draws2 = input.split("\n")
+		for (draw : draws2) {
+			val nums = draw.split(":").last.replace("	", " ").split(" ").map[trim].filter[length>0].toList
+			val fiveDigits = nums.take(5).map[toInt].toList.sort
+			val superDigits = nums.reverse.take(2).map[toInt].toList.sort
+			val newDraw = fiveDigits+" "+superDigits
+			newDraws+=newDraw
+		}
+		Collections.sort(newDraws)
+		printDuplicatedDraws(newDraws)
+		//printDraws(newDraws)
+		
+	
 	}
 	
-	def static trimToSpace(String input, List<String> chs) {
-		val newInput = newArrayList
-		newInput+=input
-		chs.forEach[ch|{
-			newInput+= newInput.last.replace(ch, " ")
+	def static printDraws(List<String> drs) {
+		drs.forEach[draw|{
+			println(draw)
+		}]
+	}
+	
+	def static printDuplicatedDraws(List<String> drs) {
+		val xs = new HashSet
+		val duplicates = new HashSet
+		drs.forEach[draw|{
+			if (xs.contains(draw)) {				
+				println(draw + " duplicate")
+				duplicates.add(draw)
+			} else {
+				xs+=draw
+			}
+			println(draw)
 		}]
 		
-		newInput.last
+		println("Duplicates "+ duplicates)
 	}
 	
-	def static processLine(String s) {
-		val x = s.split(":").last.split(" ")
+	def static toInt(String s) {
+		return Integer.parseInt(s)
+	}
+	
+	def static printDraw(String dr) {
+		val wons = new ArrayList
+	}
+	
+	def static List<String> processDraw(String s) {
+		//example 01.01.2021: 17  36  38  43  46  4  6
+		val x = s.split(":").last.replace("	", " ").split(" ")
 		return x
 	}
+	
 }
